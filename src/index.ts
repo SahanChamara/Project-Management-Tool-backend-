@@ -2,8 +2,8 @@ import "dotenv/config";
 import express, {NextFunction, Request, Response}  from "express";
 import cors from "cors"
 import session from "cookie-session";
-import { config } from "./config/app.config";
-import { log } from "console";
+import { config } from "./config/app.config"
+import connectDatabase from "./config/database.config";
 
 const app = express();
 const BASE_PATH = config.BASE_PATH;
@@ -31,12 +31,15 @@ app.use(
 
 app.get('/',(req: Request, res:Response, next: NextFunction) => {
     res.status(200).json({
-        message: "First End Pouint",
+        message: "First End Point",
     });
 });
 
+app.use(errorHandler)
+
 app.listen(config.PORT, async () => {
     console.log(`server is running on port ${config.PORT} in ${config.NODE_ENV}`);    
+    await connectDatabase();
 });
 
 
