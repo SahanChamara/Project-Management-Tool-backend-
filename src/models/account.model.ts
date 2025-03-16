@@ -1,5 +1,4 @@
 import mongoose, { Document, Schema } from "mongoose";
-import { string } from "zod";
 import { ProviderEnum, ProviderEnumType } from "../enums/account-provider.enum";
 
 export interface AccountDoucment extends Document {
