@@ -9,6 +9,10 @@ import { HTTPSTATUS } from "./config/http.config";
 import { asyncHandler } from "./middlewares/asyncHandler.middleware";
 import { BadRequestException, UnauthorizedException } from "./utils/appError";
 import { ErrorCodeEnum } from "./enums/error-code.enum";
+import authRoutes from "./routes/auth.route";
+
+import "./config/passport.config";
+import passport from "passport";
 
 const app = express();
 const BASE_PATH = config.BASE_PATH;
@@ -27,6 +31,9 @@ app.use(
     })
 );
 
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use(
     cors({
         origin: config.FRONTEND_ORIGIN,
@@ -34,7 +41,7 @@ app.use(
     })
 );
 
-app.get('/', asyncHandler(async(req: Request, res:Response, next: NextFunction) => {
+app.get('/', asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     throw new BadRequestException(
         "This is a bad request",
         ErrorCodeEnum.VALIDATION_ERROR
@@ -43,6 +50,8 @@ app.get('/', asyncHandler(async(req: Request, res:Response, next: NextFunction) 
         message: "First EndPOint"
     });
 }));
+
+app.use(`${BASE_PATH}/auth`, authRoutes);
 
 app.use(errorHandler)
 

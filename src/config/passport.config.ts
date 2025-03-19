@@ -33,10 +33,13 @@ passport.use(
                     email: email,
                 });
                 done(null, user);
-            } catch (error) {
+            } catch (error) {                
                 done(error, false);
 
             }
         }
     )
-)
+);
+
+passport.serializeUser((user: any, done) => done(null,user));
+passport.deserializeUser((user: any, done) => done(null,user));
