@@ -10,7 +10,6 @@ import { asyncHandler } from "./middlewares/asyncHandler.middleware";
 import { BadRequestException, UnauthorizedException } from "./utils/appError";
 import { ErrorCodeEnum } from "./enums/error-code.enum";
 import authRoutes from "./routes/auth.route";
-
 import "./config/passport.config";
 import passport from "passport";
 
@@ -31,6 +30,7 @@ app.use(
     })
 );
 
+// Passport Initialze
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -41,6 +41,7 @@ app.use(
     })
 );
 
+// Main Test End Point
 app.get('/', asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     throw new BadRequestException(
         "This is a bad request",
@@ -51,10 +52,14 @@ app.get('/', asyncHandler(async (req: Request, res: Response, next: NextFunction
     });
 }));
 
-app.use(`${BASE_PATH}/auth`, authRoutes);
+// Other End Points
+app.use(`${BASE_PATH}/auth`, authRoutes);           // Authentication Routings....
 
+
+// Error handler
 app.use(errorHandler)
 
+//Express Start....
 app.listen(config.PORT, async () => {
     console.log(`server is running on port ${config.PORT} in ${config.NODE_ENV}`);
     await connectDatabase();

@@ -1,6 +1,8 @@
-import { ErrorRequestHandler } from "express";
+import { ErrorRequestHandler, Response } from "express";
 import { HTTPSTATUS } from "../config/http.config";
 import { AppError } from "../utils/appError";
+import { z, ZodError } from "zod";
+import { ErrorCodeEnum } from "../enums/error-code.enum";
 
 export const errorHandler: ErrorRequestHandler = (
     error,
@@ -23,9 +25,25 @@ export const errorHandler: ErrorRequestHandler = (
         });
     }
 
+    if (error instanceof ZodError) {
+        return formatZodError(res, error);
+    }
+
 
     return res.status(HTTPSTATUS.INTERNAL_SERVER_ERROR).json({
         message: "Internal Server Error",
         error: error?.message || "Unknown error occured",
     });
 }
+
+const formatZodError = (res: Response, error: z.ZodError) => {
+    const errors = error?.issues.map((err) => ({
+        field: err.path.join("."),
+        message: err.message,
+    }));
+    return res.status(HTTPSTATUS.BAR_REQUEST).json({
+        message: "Validation Failed",
+        errors: errors,
+        errorCode: ErrorCodeEnum.VALIDATION_ERROR,
+    });
+};
