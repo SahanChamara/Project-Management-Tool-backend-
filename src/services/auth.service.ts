@@ -7,6 +7,9 @@ import { Roles } from "../enums/role.enum";
 import { BadRequestException, NotFoundException, UnauthorizedException } from "../utils/appError";
 import MemberModel from "../models/member.model";
 import { ProviderEnum } from "../enums/account-provider.enum";
+import { asyncHandler } from "../middlewares/asyncHandler.middleware";
+import { Request, Response } from "express";
+import { HTTPSTATUS } from "../config/http.config";
 
 export const loginOrCreateAccountService = async (data: {
     provider: string;
@@ -167,19 +170,19 @@ export const verfyUserService = async ({
     email: string;
     password: string;
     provider?: string;
-}) =>  {
-    const account  = await AccountModel.findOne({provider, providerId:email});
-    if(!account){
+}) => {
+    const account = await AccountModel.findOne({ provider, providerId: email });
+    if (!account) {
         throw new NotFoundException("Invalid Email");
     }
 
     const user = await UserModel.findById(account.userId);
-    if(!user){
+    if (!user) {
         throw new NotFoundException("User not Found");
     }
 
     const isMatch = await user.comparePassword(password);
-    if(!isMatch){
+    if (!isMatch) {
         throw new UnauthorizedException("Invalid Passowrd");
     }
 

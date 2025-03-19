@@ -12,6 +12,8 @@ import { ErrorCodeEnum } from "./enums/error-code.enum";
 import authRoutes from "./routes/auth.route";
 import "./config/passport.config";
 import passport from "passport";
+import userRoutes from "./routes/user.route";
+import isAuthenticated from "./middlewares/isAuthenticate.middleware";
 
 const app = express();
 const BASE_PATH = config.BASE_PATH;
@@ -54,6 +56,7 @@ app.get('/', asyncHandler(async (req: Request, res: Response, next: NextFunction
 
 // Other End Points
 app.use(`${BASE_PATH}/auth`, authRoutes);           // Authentication Routings....
+app.use(`${BASE_PATH}/user`, isAuthenticated, userRoutes);
 
 
 // Error handler
