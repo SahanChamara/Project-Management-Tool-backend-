@@ -1,4 +1,4 @@
-import UserModel from "../models/user.mode";
+import UserModel from "../models/user.model";
 import { BadRequestException } from "../utils/appError";
 
 export const getCurrentUserService = async (userId: string) => {

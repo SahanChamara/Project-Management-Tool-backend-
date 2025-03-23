@@ -1,5 +1,5 @@
 import mongoose, { mongo } from "mongoose";
-import UserModel from "../models/user.mode";
+import UserModel from "../models/user.model";
 import AccountModel from "../models/account.model";
 import WorkspaceModel from "../models/workspace.model";
 import RoleModel from "../models/role-permission.model";
