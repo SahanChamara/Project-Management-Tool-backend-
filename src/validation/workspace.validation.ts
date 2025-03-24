@@ -14,7 +14,7 @@ export const createWorkspaceSchema = z.object({
     description: descriptionSchema,
 });
 
-export const workspaceId = z.string()
+export const workspaceIdSchema = z.string()
     .trim()
     .min(1, { message: "ID is required" });
 
