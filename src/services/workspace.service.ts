@@ -52,7 +52,7 @@ export const createWorkspaceService = async (
 
         await session.commitTransaction();
         session.endSession();
-        console.log("session end");        
+        console.log("session end");
 
         return {
             workspace,
@@ -64,4 +64,15 @@ export const createWorkspaceService = async (
     } finally {
         session.endSession();
     }
+};
+
+export const getAllWorkspaceUserIsMemberService = async (userId: string) => {
+    const memberships = await MemberModel.find({ userId })
+        .populate("workspaceId")
+        .select("-password")
+        .exec();
+
+    //get the workspacedetails from memberships
+    const workspaces = memberships.map((membership) => membership.workspaceId);
+    return { workspaces };
 };
