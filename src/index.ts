@@ -14,6 +14,7 @@ import "./config/passport.config";
 import passport from "passport";
 import userRoutes from "./routes/user.route";
 import isAuthenticated from "./middlewares/isAuthenticate.middleware";
+import workspaceRoutes from "./routes/workspace.route";
 
 const app = express();
 const BASE_PATH = config.BASE_PATH;
@@ -56,7 +57,8 @@ app.get('/', asyncHandler(async (req: Request, res: Response, next: NextFunction
 
 // Other End Points
 app.use(`${BASE_PATH}/auth`, authRoutes);           // Authentication Routings....
-app.use(`${BASE_PATH}/user`, isAuthenticated, userRoutes);
+app.use(`${BASE_PATH}/user`, isAuthenticated, userRoutes);  // get Current user
+app.use(`${BASE_PATH}/workspace`,isAuthenticated,workspaceRoutes);      // create new workspace
 
 
 // Error handler
