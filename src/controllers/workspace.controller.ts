@@ -47,3 +47,12 @@ export const getWorkspaceByIdController = asyncHandler(
         });
     }
 );
+
+export const getWorkspaceMembersController = asyncHandler(
+    async (req: Request, res: Response) => {
+        const workspaceId = workspaceIdSchema.parse(req.params.id);
+        const userId = req.user?._id;
+
+        const { role } = await getMemberRoleInworkspace(userId, workspaceId);
+    }
+)
