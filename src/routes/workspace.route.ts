@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createWorkspaceController, getAllWorkspacesUserIsMemberController, getWorkspaceByIdController } from "../controllers/workspace.controller";
+import { createWorkspaceController, getAllWorkspacesUserIsMemberController, getWorkspaceByIdController, getWorkspaceMembersController } from "../controllers/workspace.controller";
 
 const workspaceRoutes = Router();
 
