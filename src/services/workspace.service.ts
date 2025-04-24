@@ -136,4 +136,36 @@ export const getWorkspaceAnalyticsService = async (workspaceId: string) => {
     };
 
     return { analytics }
-}
+};
+
+export const changeMemberRoleService = async (
+    workspaceId: string,
+    memberId: string,
+    roleId: string,
+) => {
+    const workspace = await WorkspaceModel.findById(workspaceId);
+    if(!workspace){
+        throw new NotFoundException("Workspace Not Found");
+    }
+
+    const role = await RoleModel.findById(roleId);
+    if(!role){
+        throw new NotFoundException("role not Found");
+    }
+
+    const member = await MemberModel.findOne({
+        userId: workspaceId,
+        workspaceId: workspaceId,
+    });
+
+    if(!member){
+        throw new NotFoundException("Member not found");
+    }
+
+    member.role = role;
+    await member.save();
+
+    return {
+        member,
+    };
+};
