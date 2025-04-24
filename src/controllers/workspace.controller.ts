@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { asyncHandler } from "../middlewares/asyncHandler.middleware";
 import { createWorkspaceSchema, workspaceIdSchema } from "../validation/workspace.validation";
-import { createWorkspaceService, getAllWorkspaceUserIsMemberService, getWorkspaceByIdService, getWorkspaceMemberservice } from "../services/workspace.service";
+import { createWorkspaceService, getAllWorkspaceUserIsMemberService, getWorkspaceAnalyticsService, getWorkspaceByIdService, getWorkspaceMemberservice } from "../services/workspace.service";
 import { HTTPSTATUS } from "../config/http.config";
 import { userInfo } from "os";
 import { getMemberRoleInworkspace } from "../services/member.service";
@@ -70,7 +70,7 @@ export const getWorkspaceMembersController = asyncHandler(
 
 export const getWoorkspaceAnalyticsController = asyncHandler(
     async (req: Request, res: Response) => {
-        const workspaceId = workspaceIdSchema.parse(req.params._id);
+        const workspaceId = workspaceIdSchema.parse(req.params.id);
         const userId = req.user?._id;
 
         const { role } = await getMemberRoleInworkspace(userId, workspaceId);

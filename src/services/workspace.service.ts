@@ -123,4 +123,17 @@ export const getWorkspaceAnalyticsService = async (workspaceId: string) => {
         dueDate: { $lt: currentDate },
         status: { $ne: TaskStatusEnum.DONE },
     });
+
+    const completedTask = await TaskModel.countDocuments({
+        workspace: workspaceId,
+        status: TaskStatusEnum.DONE
+    });
+
+    const analytics = {
+        totalTask,
+        overDueTask,
+        completedTask,
+    };
+
+    return { analytics }
 }
