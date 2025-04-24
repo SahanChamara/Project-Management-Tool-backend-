@@ -67,3 +67,20 @@ export const getWorkspaceMembersController = asyncHandler(
         });
     }
 );
+
+export const getWoorkspaceAnalyticsController = asyncHandler(
+    async (req: Request, res: Response) => {
+        const workspaceId = workspaceIdSchema.parse(req.params._id);
+        const userId = req.user?._id;
+
+        const { role } = await getMemberRoleInworkspace(userId, workspaceId);
+        roleGuard(role, [Permissions.VIEW_ONLY]);
+
+        const { analytics } = await getWorkspaceAnalyticsService(workspaceId);
+
+        return res.status(HTTPSTATUS.OK).json({
+            message: "Workspace analytics retriwed success",
+            analytics,
+        });
+    }
+);
