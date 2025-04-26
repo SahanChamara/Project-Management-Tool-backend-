@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { asyncHandler } from "../middlewares/asyncHandler.middleware";
-import { changeRoleSchema, createWorkspaceSchema, workspaceIdSchema } from "../validation/workspace.validation";
+import { changeRoleSchema, createWorkspaceSchema, updateWorkspaceSChema, workspaceIdSchema } from "../validation/workspace.validation";
 import { changeMemberRoleService, createWorkspaceService, getAllWorkspaceUserIsMemberService, getWorkspaceAnalyticsService, getWorkspaceByIdService, getWorkspaceMemberservice } from "../services/workspace.service";
 import { HTTPSTATUS } from "../config/http.config";
 import { userInfo } from "os";
@@ -93,18 +93,41 @@ export const changeWorkspaceMemberRoleController = asyncHandler(
         const userId = req.user?._id;
 
         const { role } = await getMemberRoleInworkspace(userId, workspaceId);
-        roleGuard (role, [Permissions.CHANGE_MEMBER_ROLE]);
+        roleGuard(role, [Permissions.CHANGE_MEMBER_ROLE]);
 
         const { member } = await changeMemberRoleService(
             workspaceId,
             memberId,
             roleId
-          );
-      
-          return res.status(HTTPSTATUS.OK).json({
+        );
+
+        return res.status(HTTPSTATUS.OK).json({
             message: "Member Role changed successfully",
             member,
-          });
+        });
 
+    }
+);
+
+export const updateWorkspaceByIdController = asyncHandler(
+    async (req: Request, res: Response) => {
+        const workspaceId = workspaceIdSchema.parse(req.params.id);
+        const { name, description } = updateWorkspaceSChema.parse(req.body);
+
+        const userId = req.user?._id;
+
+        const { role } = await getMemberRoleInworkspace(userId, workspaceId);
+        roleGuard(role, [Permissions.EDIT_WORKSPACE]);
+
+        const { workspace } = await updateWorkspaceByIdService(
+            workspaceId,
+            name,
+            description
+        );
+
+        return res.status(HTTPSTATUS.OK).json({
+            message: "Workspace updated successfully",
+            workspace,
+        });
     }
 )
