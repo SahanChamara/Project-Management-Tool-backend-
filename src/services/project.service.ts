@@ -82,3 +82,30 @@ export const deleteProjectService = async (
   
     return project;
   };
+
+  // get project in workspace
+  export const getProjectsInWorkspaceService = async (
+    workspaceId: string,
+    pageSize: number,
+    pageNumber: number
+  ) => {
+    // Step 1: Find all projects in the workspace
+  
+    const totalCount = await ProjectModel.countDocuments({
+      workspace: workspaceId,
+    });
+  
+    const skip = (pageNumber - 1) * pageSize;
+  
+    const projects = await ProjectModel.find({
+      workspace: workspaceId,
+    })
+      .skip(skip)
+      .limit(pageSize)
+      .populate("createdBy", "_id name profilePicture -password")
+      .sort({ createdAt: -1 });
+  
+    const totalPages = Math.ceil(totalCount / pageSize);
+  
+    return { projects, totalCount, totalPages, skip };
+  };
